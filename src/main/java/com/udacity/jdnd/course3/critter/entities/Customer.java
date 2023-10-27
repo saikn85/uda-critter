@@ -12,15 +12,24 @@ public class Customer {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(
+            name = "name",
+            nullable = false
+    )
     private String name;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(
+            name = "phone_number",
+            nullable = false
+    )
     private String phoneNumber;
 
     // UNI DIRECTIONAL REL
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id")
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(name = "customer_id")
     private Set<Pet> pets;
 
     public Customer() {

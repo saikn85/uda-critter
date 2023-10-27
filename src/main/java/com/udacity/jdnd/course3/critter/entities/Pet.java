@@ -14,7 +14,10 @@ public class Pet {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(
+            name = "name",
+            nullable = false
+    )
     private String name;
 
     @Column(name = "type")
