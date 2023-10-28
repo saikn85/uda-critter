@@ -35,4 +35,14 @@ public class CustomerService implements ICustomerService {
                 Customer.class);
         return query.getResultList();
     }
+
+    @Override
+    public Customer findCustomerByPetId(long id) {
+        TypedQuery<Customer> query = _manager.createQuery(
+                "SELECT c FROM Customer c " +
+                        "JOIN FETCH c.pets p " +
+                        "WHERE p.id = :theId", Customer.class);
+        query.setParameter("theId", id);
+        return query.getSingleResult();
+    }
 }

@@ -40,7 +40,7 @@ public class UserController {
             Customer customer = _custSvc.save(CustomerMapper.mapDtoToEntity(customerDTO));
             return CustomerMapper.mapEntityToDto(customer);
         } catch (Exception ex) {
-            System.out.println("save customer failed : " + ex.getMessage());
+            System.out.println("saveCustomer failed : " + ex.getMessage());
             return new CustomerDTO();
         }
     }
@@ -53,7 +53,7 @@ public class UserController {
                     .map(customer -> CustomerMapper.mapEntityToDto(customer))
                     .collect(Collectors.toList());
         } catch (Exception ex) {
-            System.out.println("get all customer failed : " + ex.getMessage());
+            System.out.println("getAllCustomers failed : " + ex.getMessage());
             return new ArrayList<>();
         }
     }
@@ -64,7 +64,7 @@ public class UserController {
             Employee emp = _empSvc.save(EmployeeMapper.mapDtoToEntity(employeeDTO));
             return EmployeeMapper.mapEntityToDto(emp);
         } catch (Exception ex) {
-            System.out.println("save employee failed : " + ex.getMessage());
+            System.out.println("saveEmployee failed : " + ex.getMessage());
             return new EmployeeDTO();
         }
     }
@@ -75,14 +75,20 @@ public class UserController {
             Employee emp = _empSvc.getEmployeeById(employeeId);
             return EmployeeMapper.mapEntityToDto(emp);
         } catch (Exception ex) {
-            System.out.println("get all customer failed : " + ex.getMessage());
+            System.out.println("getEmployee failed : " + ex.getMessage());
             return new EmployeeDTO();
         }
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId) {
-        throw new UnsupportedOperationException();
+        try {
+            Customer customer = _custSvc.findCustomerByPetId(petId);
+            return CustomerMapper.mapEntityToDto(customer);
+        } catch (Exception ex) {
+            System.out.println("getEmployee failed : " + ex.getMessage());
+            return new CustomerDTO();
+        }
     }
 
     @PutMapping("/employee/{employeeId}")

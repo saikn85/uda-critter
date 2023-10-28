@@ -29,14 +29,22 @@ public class PetController {
             Pet pet = _petSvc.save(PetMapper.mapDtoToEntity(petDTO), petDTO.getOwnerId());
             return PetMapper.mapEntityToDto(pet, petDTO.getOwnerId());
         } catch (Exception ex) {
-            System.out.println("save pet failed : " + ex.getMessage());
+            System.out.println("savePet failed : " + ex.getMessage());
             return new PetDTO();
         }
     }
 
     @GetMapping("/{petId}")
     public PetDTO getPet(@PathVariable long petId) {
-        
+        try {
+            Customer customer = _petSvc.findPetById(petId);
+            return customer.getPets().stream()
+                    .map(pet -> PetMapper.mapEntityToDto(pet, customer.getId()))
+                    .findFirst().orElse(new PetDTO());
+        } catch (Exception ex) {
+            System.out.println("getPet failed : " + ex.getMessage());
+            return new PetDTO();
+        }
     }
 
     @GetMapping("/owner/{ownerId}")
@@ -47,7 +55,7 @@ public class PetController {
                     .map(pet -> PetMapper.mapEntityToDto(pet, customer.getId()))
                     .collect(Collectors.toList());
         } catch (Exception ex) {
-            System.out.println("save pet failed : " + ex.getMessage());
+            System.out.println("getPetsByOwner pet failed : " + ex.getMessage());
             return new ArrayList<>();
         }
     }

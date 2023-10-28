@@ -31,11 +31,21 @@ public class PetService implements IPetService {
     }
 
     @Override
+    public Customer findPetById(long id) {
+        TypedQuery<Customer> query = _manager.createQuery(
+                "SELECT c FROM Customer c " +
+                        "JOIN FETCH c.pets p " +
+                        "WHERE p.id = :theId", Customer.class);
+        query.setParameter("theId", id);
+        return query.getSingleResult();
+    }
+
+    @Override
     public Customer findPetsByOwnerId(long id) {
         TypedQuery<Customer> query = _manager.createQuery(
-                "SELECT customer FROM Customer customer " +
-                        "JOIN FETCH customer.pets " +
-                        "WHERE customer.customer_id = :theId", Customer.class);
+                "SELECT c FROM Customer c " +
+                        "JOIN FETCH c.pets " +
+                        "WHERE c.id = :theId", Customer.class);
         query.setParameter("theId", id);
         return query.getSingleResult();
     }
