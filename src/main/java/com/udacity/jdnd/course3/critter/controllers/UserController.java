@@ -1,11 +1,14 @@
 package com.udacity.jdnd.course3.critter.controllers;
 
 import com.udacity.jdnd.course3.critter.dao.CustomerService;
+import com.udacity.jdnd.course3.critter.dao.EmployeeService;
 import com.udacity.jdnd.course3.critter.entities.Customer;
 import com.udacity.jdnd.course3.critter.dtos.CustomerDTO;
 import com.udacity.jdnd.course3.critter.dtos.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.dtos.EmployeeRequestDTO;
+import com.udacity.jdnd.course3.critter.entities.Employee;
 import com.udacity.jdnd.course3.critter.util.user.CustomerMapper;
+import com.udacity.jdnd.course3.critter.util.user.EmployeeMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -23,10 +26,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private CustomerService _custSvc;
+    private final CustomerService _custSvc;
+    private final EmployeeService _empSvc;
 
-    public UserController(CustomerService custSvc) {
+    public UserController(CustomerService custSvc, EmployeeService empSvc) {
         _custSvc = custSvc;
+        _empSvc = empSvc;
     }
 
     @PostMapping("/customer")
@@ -52,18 +57,30 @@ public class UserController {
         }
     }
 
-    @GetMapping("/customer/pet/{petId}")
-    public CustomerDTO getOwnerByPet(@PathVariable long petId) {
-        throw new UnsupportedOperationException();
-    }
-
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        try {
+            Employee emp = _empSvc.save(EmployeeMapper.mapDtoToEntity(employeeDTO));
+            return EmployeeMapper.mapEntityToDto(emp);
+        } catch (Exception ex) {
+            System.out.println("save employee failed : " + ex.getMessage());
+            return new EmployeeDTO();
+        }
     }
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
+        try {
+            Employee emp = _empSvc.getEmployeeById(employeeId);
+            return EmployeeMapper.mapEntityToDto(emp);
+        } catch (Exception ex) {
+            System.out.println("get all customer failed : " + ex.getMessage());
+            return new EmployeeDTO();
+        }
+    }
+
+    @GetMapping("/customer/pet/{petId}")
+    public CustomerDTO getOwnerByPet(@PathVariable long petId) {
         throw new UnsupportedOperationException();
     }
 

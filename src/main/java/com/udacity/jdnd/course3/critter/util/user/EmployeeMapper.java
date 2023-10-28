@@ -13,5 +13,6 @@ public class EmployeeMapper {
         dto.setId(emp.getId());
         dto.setName(emp.getName());
         dto.setSkills(emp.getSkills());
+        return dto;
     }
 }
