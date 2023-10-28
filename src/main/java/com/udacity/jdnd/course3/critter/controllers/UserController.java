@@ -48,7 +48,8 @@ public class UserController {
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers() {
         try {
-            return  _custSvc.getAll()
+            List<Customer> customers = _custSvc.getAll();
+            return  customers.stream()
                     .map(customer -> CustomerMapper.mapEntityToDto(customer))
                     .collect(Collectors.toList());
         } catch (Exception ex) {

@@ -1,9 +1,15 @@
 package com.udacity.jdnd.course3.critter.controllers;
 
+import com.udacity.jdnd.course3.critter.dao.PetService;
 import com.udacity.jdnd.course3.critter.dtos.PetDTO;
+import com.udacity.jdnd.course3.critter.entities.Customer;
+import com.udacity.jdnd.course3.critter.entities.Pet;
+import com.udacity.jdnd.course3.critter.util.pet.PetMapper;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Pets.
@@ -11,24 +17,38 @@ import java.util.List;
 @RestController
 @RequestMapping("/pet")
 public class PetController {
+    private final PetService _petSvc;
+
+    public PetController(PetService petSvc) {
+        _petSvc = petSvc;
+    }
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
-        throw new UnsupportedOperationException();
+        try {
+            Pet pet = _petSvc.save(PetMapper.mapDtoToEntity(petDTO), petDTO.getOwnerId());
+            return PetMapper.mapEntityToDto(pet, petDTO.getOwnerId());
+        } catch (Exception ex) {
+            System.out.println("save pet failed : " + ex.getMessage());
+            return new PetDTO();
+        }
     }
 
     @GetMapping("/{petId}")
     public PetDTO getPet(@PathVariable long petId) {
-        throw new UnsupportedOperationException();
-    }
-
-    @GetMapping
-    public List<PetDTO> getPets(){
-        throw new UnsupportedOperationException();
+        
     }
 
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
-        throw new UnsupportedOperationException();
+        try {
+            Customer customer = _petSvc.findPetsByOwnerId(ownerId);
+            return customer.getPets().stream()
+                    .map(pet -> PetMapper.mapEntityToDto(pet, customer.getId()))
+                    .collect(Collectors.toList());
+        } catch (Exception ex) {
+            System.out.println("save pet failed : " + ex.getMessage());
+            return new ArrayList<>();
+        }
     }
 }

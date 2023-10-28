@@ -11,7 +11,7 @@ import java.util.Set;
 public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "pet_id")
     private long id;
 
     @Column(
@@ -89,16 +89,5 @@ public class Pet {
 
     public void setSchedules(Set<Schedule> schedules) {
         this.schedules = schedules;
-    }
-
-    @Override
-    public String toString() {
-        return "Pet{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", type=" + type +
-                ", notes='" + notes + '\'' +
-                ", birthDate=" + birthDate +
-                '}';
     }
 }

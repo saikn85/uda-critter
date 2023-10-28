@@ -9,7 +9,7 @@ import java.util.Set;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "customer_id")
     private long id;
 
     @Column(
@@ -70,15 +70,6 @@ public class Customer {
 
     public void setPets(Set<Pet> pets) {
         this.pets = pets;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
     }
 
     // Add Pets

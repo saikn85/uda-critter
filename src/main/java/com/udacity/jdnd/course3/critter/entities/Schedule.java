@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "schedule_id")
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -63,15 +63,5 @@ public class Schedule {
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    @Override
-    public String toString() {
-        return "Schedule{" +
-                "id=" + id +
-                ", pet=" + pet +
-                ", employee=" + employee +
-                ", date=" + date +
-                '}';
     }
 }
