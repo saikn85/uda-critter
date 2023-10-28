@@ -1,6 +1,6 @@
 package com.udacity.jdnd.course3.critter.entities;
 
-import com.udacity.jdnd.course3.critter.entities.utils.EmployeeSkill;
+import com.udacity.jdnd.course3.critter.entities.enums.EmployeeSkill;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
