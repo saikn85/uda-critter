@@ -2,10 +2,10 @@ package com.udacity.jdnd.course3.critter.controllers;
 
 import com.udacity.jdnd.course3.critter.dao.CustomerService;
 import com.udacity.jdnd.course3.critter.dao.EmployeeService;
-import com.udacity.jdnd.course3.critter.entities.Customer;
 import com.udacity.jdnd.course3.critter.dtos.CustomerDTO;
 import com.udacity.jdnd.course3.critter.dtos.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.dtos.EmployeeRequestDTO;
+import com.udacity.jdnd.course3.critter.entities.Customer;
 import com.udacity.jdnd.course3.critter.entities.Employee;
 import com.udacity.jdnd.course3.critter.util.user.CustomerMapper;
 import com.udacity.jdnd.course3.critter.util.user.EmployeeMapper;
@@ -49,12 +49,21 @@ public class UserController {
     public List<CustomerDTO> getAllCustomers() {
         try {
             List<Customer> customers = _custSvc.getAll();
-            return  customers.stream()
-                    .map(customer -> CustomerMapper.mapEntityToDto(customer))
-                    .collect(Collectors.toList());
+            return customers.stream().map(customer -> CustomerMapper.mapEntityToDto(customer)).collect(Collectors.toList());
         } catch (Exception ex) {
             System.out.println("getAllCustomers failed : " + ex.getMessage());
             return new ArrayList<>();
+        }
+    }
+
+    @GetMapping("/customer/pet/{petId}")
+    public CustomerDTO getOwnerByPet(@PathVariable long petId) {
+        try {
+            Customer customer = _custSvc.findCustomerByPetId(petId);
+            return CustomerMapper.mapEntityToDto(customer);
+        } catch (Exception ex) {
+            System.out.println("getOwnerByPet failed : " + ex.getMessage());
+            return new CustomerDTO();
         }
     }
 
@@ -69,7 +78,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/employee/{employeeId}")
+    @GetMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
         try {
             Employee emp = _empSvc.getEmployeeById(employeeId);
@@ -80,25 +89,25 @@ public class UserController {
         }
     }
 
-    @GetMapping("/customer/pet/{petId}")
-    public CustomerDTO getOwnerByPet(@PathVariable long petId) {
-        try {
-            Customer customer = _custSvc.findCustomerByPetId(petId);
-            return CustomerMapper.mapEntityToDto(customer);
-        } catch (Exception ex) {
-            System.out.println("getEmployee failed : " + ex.getMessage());
-            return new CustomerDTO();
-        }
-    }
-
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        try {
+            _empSvc.setAvailableDays(employeeId, daysAvailable);
+        } catch (Exception ex) {
+            System.out.println("setAvailability failed : " + ex.getMessage());
+        }
     }
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        try {
+            DayOfWeek day = employeeDTO.getDate().getDayOfWeek();
+            return _empSvc.findAllAvailableEmpWithSkills(day, employeeDTO.getSkills())
+                    .map(emp -> EmployeeMapper.mapEntityToDto(emp))
+                    .collect(Collectors.toList());
+        } catch (Exception ex) {
+            System.out.println("findEmployeesForService failed : " + ex.getMessage());
+            return new ArrayList<>();
+        }
     }
-
 }
