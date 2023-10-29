@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,7 +50,10 @@ public class UserController {
     public List<CustomerDTO> getAllCustomers() {
         try {
             List<Customer> customers = _custSvc.getAll();
-            return customers.stream().map(customer -> CustomerMapper.mapEntityToDto(customer)).collect(Collectors.toList());
+            return customers.stream()
+                    .map(customer -> CustomerMapper.mapEntityToDto(customer))
+                    .sorted(Comparator.comparing(c -> c.getId()))
+                    .collect(Collectors.toList());
         } catch (Exception ex) {
             System.out.println("getAllCustomers failed : " + ex.getMessage());
             return new ArrayList<>();
@@ -102,8 +106,9 @@ public class UserController {
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
         try {
             DayOfWeek day = employeeDTO.getDate().getDayOfWeek();
-            return _empSvc.findAllAvailableEmpWithSkills(day, employeeDTO.getSkills())
+            return _empSvc.findAllAvailableEmployees(day, employeeDTO.getSkills())
                     .map(emp -> EmployeeMapper.mapEntityToDto(emp))
+                    .sorted(Comparator.comparing(e -> e.getId()))
                     .collect(Collectors.toList());
         } catch (Exception ex) {
             System.out.println("findEmployeesForService failed : " + ex.getMessage());

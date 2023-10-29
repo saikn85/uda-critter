@@ -14,5 +14,7 @@ public interface IEmployeeService {
 
     Employee getEmployeeById(long id);
 
-    Stream<Employee> findAllAvailableEmpWithSkills(DayOfWeek day, Set<EmployeeSkill> employeeSkills);
+    Stream<Employee> findAllAvailableEmployees(DayOfWeek day, Set<EmployeeSkill> employeeSkills);
+
+    Employee findScheduleByEmpId(long id);
 }

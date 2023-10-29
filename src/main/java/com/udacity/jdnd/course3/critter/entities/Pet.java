@@ -4,6 +4,8 @@ import com.udacity.jdnd.course3.critter.entities.enums.PetType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,8 +32,12 @@ public class Pet {
     @Column(name = "notes")
     private String notes;
 
-    @OneToMany(mappedBy = "pet")
-    private Set<Schedule> schedules;
+    @ManyToMany(
+            mappedBy = "pets",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    private List<Schedule> schedules = new ArrayList<>();
 
     public Pet() {
     }
@@ -41,6 +47,14 @@ public class Pet {
         this.type = type;
         this.notes = notes;
         this.birthDate = birthDate;
+    }
+
+    public List<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(List<Schedule> schedules) {
+        this.schedules = schedules;
     }
 
     public long getId() {
@@ -81,13 +95,5 @@ public class Pet {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public Set<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(Set<Schedule> schedules) {
-        this.schedules = schedules;
     }
 }

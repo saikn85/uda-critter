@@ -35,7 +35,8 @@ public class PetService implements IPetService {
         TypedQuery<Customer> query = _manager.createQuery(
                 "SELECT c FROM Customer c " +
                         "JOIN FETCH c.pets p " +
-                        "WHERE p.id = :theId", Customer.class);
+                        "WHERE p.id = :theId",
+                Customer.class);
         query.setParameter("theId", id);
         return query.getSingleResult();
     }
@@ -45,7 +46,31 @@ public class PetService implements IPetService {
         TypedQuery<Customer> query = _manager.createQuery(
                 "SELECT c FROM Customer c " +
                         "JOIN FETCH c.pets " +
-                        "WHERE c.id = :theId", Customer.class);
+                        "WHERE c.id = :theId",
+                Customer.class);
+        query.setParameter("theId", id);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Pet findScheduleByPetId(long id) {
+        TypedQuery<Pet> query = _manager.createQuery(
+                "SELECT p FROM Pet p " +
+                        "LEFT JOIN p.schedules " +
+                        "WHERE p.id = :theId",
+                Pet.class);
+        query.setParameter("theId", id);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Customer findScheduleByOwnerId(long id) {
+        TypedQuery<Customer> query = _manager.createQuery(
+                "SELECT c FROM Customer c " +
+                        "LEFT JOIN c.pets p " +
+                        "LEFT JOIN p.schedules" +
+                        "WHERE c.id = :theId",
+                Customer.class);
         query.setParameter("theId", id);
         return query.getSingleResult();
     }

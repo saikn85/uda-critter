@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class CustomerService implements ICustomerService {
@@ -30,8 +29,8 @@ public class CustomerService implements ICustomerService {
     @Override
     public List<Customer> getAll() {
         TypedQuery<Customer> query = _manager.createQuery(
-                "SELECT customer FROM Customer customer " +
-                        "LEFT JOIN customer.pets pets",
+                "SELECT DISTINCT c FROM Customer c " +
+                        "LEFT JOIN c.pets",
                 Customer.class);
         return query.getResultList();
     }
@@ -39,9 +38,9 @@ public class CustomerService implements ICustomerService {
     @Override
     public Customer findCustomerByPetId(long id) {
         TypedQuery<Customer> query = _manager.createQuery(
-                "SELECT c FROM Customer c " +
-                        "JOIN FETCH c.pets p " +
-                        "WHERE p.id = :theId", Customer.class);
+                "SELECT DISTINCT c FROM Customer c " +
+                        "JOIN FETCH c.pets p " + "WHERE p.id = :theId",
+                Customer.class);
         query.setParameter("theId", id);
         return query.getSingleResult();
     }

@@ -1,9 +1,11 @@
 package com.udacity.jdnd.course3.critter.entities;
 
-import org.checkerframework.checker.units.qual.C;
+import com.udacity.jdnd.course3.critter.entities.enums.EmployeeSkill;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "schedule")
@@ -13,24 +15,64 @@ public class Schedule {
     @Column(name = "schedule_id")
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id")
-    private Pet pet;
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    @JoinTable(
+            name = "schedule_employee",
+            joinColumns = @JoinColumn(name = "schedule_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    private List<Employee> employees;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    @JoinTable(
+            name = "schedule_pet",
+            joinColumns = @JoinColumn(name = "schedule_id"),
+            inverseJoinColumns = @JoinColumn(name = "pet_id")
+    )
+    private List<Pet> pets;
 
     @Column(name = "date")
     private LocalDate date;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "scheduled_activities",
+            joinColumns = @JoinColumn(name = "schedule_id")
+    )
+    @Column(name = "activity")
+    private Set<EmployeeSkill> activities;
+
     public Schedule() {
     }
 
-    public Schedule(Pet pet, Employee employee, LocalDate date) {
-        this.pet = pet;
-        this.employee = employee;
-        this.date = date;
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
+    public List<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
+    }
+
+    public Set<EmployeeSkill> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(Set<EmployeeSkill> activities) {
+        this.activities = activities;
     }
 
     public long getId() {
@@ -39,22 +81,6 @@ public class Schedule {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     public LocalDate getDate() {

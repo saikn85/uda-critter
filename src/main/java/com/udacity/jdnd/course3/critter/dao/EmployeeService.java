@@ -10,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.time.DayOfWeek;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -36,7 +35,7 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public Stream<Employee> findAllAvailableEmpWithSkills(DayOfWeek day, Set<EmployeeSkill> employeeSkills) {
+    public Stream<Employee> findAllAvailableEmployees(DayOfWeek day, Set<EmployeeSkill> employeeSkills) {
         TypedQuery<Employee> query = _manager.createQuery(
                 "SELECT DISTINCT e FROM Employee e " +
                         "INNER JOIN e.daysAvailable d " +
@@ -44,7 +43,9 @@ public class EmployeeService implements IEmployeeService {
                 Employee.class);
         query.setParameter("dayOfWeek", day);
         Stream<Employee> emp$ = query.getResultStream();
-        return emp$.filter(emp -> emp.getSkills().containsAll(employeeSkills));
+        if (employeeSkills != null) return emp$.filter(emp -> emp.getSkills().containsAll(employeeSkills));
+
+        return emp$;
     }
 
     @Override
@@ -53,5 +54,16 @@ public class EmployeeService implements IEmployeeService {
         Employee emp = _manager.find(Employee.class, employeeId);
         emp.setDaysAvailable(daysAvailable);
         _manager.persist(emp);
+    }
+
+    @Override
+    public Employee findScheduleByEmpId(long id) {
+        TypedQuery<Employee> query = _manager.createQuery(
+                "SELECT e FROM Employee e " +
+                        "JOIN FETCH e.schedules " +
+                        "WHERE e.id = :theId", Employee.class);
+        query.setParameter("theId", id);
+        Employee emp = query.getSingleResult();
+        return emp;
     }
 }

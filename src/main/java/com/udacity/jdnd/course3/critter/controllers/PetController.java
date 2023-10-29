@@ -8,6 +8,7 @@ import com.udacity.jdnd.course3.critter.util.pet.PetMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,7 @@ public class PetController {
             Customer customer = _petSvc.findPetsByOwnerId(ownerId);
             return customer.getPets().stream()
                     .map(pet -> PetMapper.mapEntityToDto(pet, customer.getId()))
+                    .sorted(Comparator.comparing(p -> p.getId()))
                     .collect(Collectors.toList());
         } catch (Exception ex) {
             System.out.println("getPetsByOwner pet failed : " + ex.getMessage());
