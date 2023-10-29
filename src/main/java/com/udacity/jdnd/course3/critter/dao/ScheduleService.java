@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,6 +33,7 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Schedule save(ScheduleDTO dto) {
         Schedule schedule = new Schedule();
 
