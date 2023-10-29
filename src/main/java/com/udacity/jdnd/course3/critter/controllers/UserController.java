@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Handles web requests related to Users.
@@ -49,8 +50,8 @@ public class UserController {
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers() {
         try {
-            List<Customer> customers = _custSvc.getAll();
-            return customers.stream()
+            Stream<Customer> customers = _custSvc.getAll();
+            return customers
                     .map(customer -> CustomerMapper.mapEntityToDto(customer))
                     .sorted(Comparator.comparing(c -> c.getId()))
                     .collect(Collectors.toList());
