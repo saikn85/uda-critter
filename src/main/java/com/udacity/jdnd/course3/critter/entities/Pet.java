@@ -96,4 +96,10 @@ public class Pet {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    public void addSchedule(Schedule s){
+        if (schedules == null) schedules = new ArrayList<>();
+
+        schedules.add(s);
+    }
 }

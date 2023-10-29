@@ -66,9 +66,9 @@ public class PetService implements IPetService {
     @Override
     public Customer findScheduleByOwnerId(long id) {
         TypedQuery<Customer> query = _manager.createQuery(
-                "SELECT c FROM Customer c " +
+                "SELECT DISTINCT c FROM Customer c " +
                         "LEFT JOIN c.pets p " +
-                        "LEFT JOIN p.schedules" +
+                        "LEFT JOIN p.schedules " +
                         "WHERE c.id = :theId",
                 Customer.class);
         query.setParameter("theId", id);

@@ -57,6 +57,16 @@ public class ScheduleService implements IScheduleService {
         schedule.setActivities(dto.getActivities());
 
         _manager.persist(schedule);
+
+        for (Pet pet: pets) {
+            pet.addSchedule(schedule);
+            _manager.persist(pet);
+        }
+        for (Employee emp: employees) {
+            emp.addSchedule(schedule);
+            _manager.persist(emp);
+        }
+
         return schedule;
     }
 

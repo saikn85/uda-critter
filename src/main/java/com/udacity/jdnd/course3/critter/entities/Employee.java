@@ -87,4 +87,10 @@ public class Employee {
     public void setSchedules(List<Schedule> schedules) {
         this.schedules = schedules;
     }
+
+    public void addSchedule(Schedule s){
+        if (schedules == null) schedules = new ArrayList<>();
+
+        schedules.add(s);
+    }
 }
